@@ -9,9 +9,9 @@ Run Cosmos sessions in your AWS account using the [official Helm chart](https://
 ```mermaid
 flowchart LR
   subgraph VPC["Your VPC — one Availability Zone"]
-    S["Public subnet: one always-on t3.medium\nk3s + Cosmos controller + Karpenter + DNS + NAT"]
-    W1["Private worker A\nm8i-flex.xlarge: ~6 session pods"]
-    W2["Private worker B, when needed\nm8i-flex.xlarge: ~6 session pods"]
+    S["cosmos-private-system\nPublic subnet: one always-on t3.medium\nk3s + Cosmos controller + Karpenter + DNS + NAT"]
+    W1["cosmos-private-kvm\nPrivate worker A\nm8i-flex.xlarge: ~6 session pods"]
+    W2["cosmos-private-kvm\nPrivate worker B, when needed\nm8i-flex.xlarge: ~6 session pods"]
     W1 -->|"Private cluster traffic + internet egress"| S
     W2 --> S
   end
@@ -19,6 +19,7 @@ flowchart LR
   S --> E["Registries + private AWS ECR snapshots"]
 ```
 
+- EC2 instance names are `<stack-name>-system` and `<stack-name>-kvm`; the default `--stack-name` is `cosmos-private`.
 - **No EKS or managed NAT gateway.** The system node also provides NAT; it is a single point of failure.
 - Only the system node has a public IPv4. No public SSH/API ingress; administration uses AWS Systems Manager (SSM). Worker internet egress is TCP 80/443 only.
 - Karpenter adds workers for pending pods and removes empty workers after 120 seconds. Workers scale to zero; ECR snapshots persist. Active sessions are not repacked.
