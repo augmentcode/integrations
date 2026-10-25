@@ -57,7 +57,7 @@ The scripts manage component versions. Ubuntu 24.04 amd64's regional AMI is disc
 
 ### 2. Clone the code and preview
 
-In CloudShell, clone the repository below. For review before this PR is merged, add `--branch nico/self-hosted-k8s-aws` to the clone command.
+In CloudShell, clone the repository and preview the deployment:
 
 ```bash
 git clone https://github.com/augmentcode/integrations.git
